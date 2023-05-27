@@ -1,0 +1,16 @@
+
+.hold-spinner {
+    width: 100%;
+    height: auto;
+    /* background-color: red; */
+    text-align: center;
+  }
+  
+  .spinner {
+    width: 100px;
+  }
+  
+  .loading-text {
+    font-size: 22px;
+    color: white;
+  }

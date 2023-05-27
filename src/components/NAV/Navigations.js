@@ -1,38 +1,39 @@
 import React, { useEffect, useState, useContext } from "react";
 import MoviesCtx from "../../stores/movies-context";
+import { PageNumberCtx } from "../../stores/pagination/page-number";
+import useFetchHook from "../../Hooks/fetch-hook";
 
 import styles from "./Navigation.module.css";
 
 const Navigation = () => {
   const allMoviesCtx = useContext(MoviesCtx);
-  const { addMovies } = allMoviesCtx;
+  const pageNumbering = useContext(PageNumberCtx);
+
+  const { resetPage, pageNumber } = pageNumbering;
+
+  const { addMovies, changeURL } = allMoviesCtx;
   const [query, setQuery] = useState("");
   const searchMovieHandler = (e) => {
     setQuery(e.target.value);
   };
 
+  const URL = `https://api.themoviedb.org/3/search/movie?query=${query}`;
+  const fetchMovies = useFetchHook(URL);
   useEffect(() => {
     const typeTimer = setTimeout(() => {
-      if (query.length === 0) return;
-      (async function () {
-        const options = {
-          method: "GET",
-          headers: {
-            accept: "application/json",
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2OGY5Y2IyNDM5ODIxMzNkN2Q3NzU3YWU4MTBhMTJlOSIsInN1YiI6IjY0NmZjMzQzNTQzN2Y1MDEyNjNhM2QzMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.DiEhFATYQoD8ZLFa_rjLqPKkcq_jmPIbCHTaPF4sX9I",
-          },
-        };
-        const fetchURL = `https://api.themoviedb.org/3/search/movie?query=${query}`;
-        const fetchInitMovies = await fetch(fetchURL, options);
-        const moviesResults = await fetchInitMovies.json();
-        const { results, total_pages, total_results } = moviesResults;
-        console.log(results);
-        addMovies(results, { total_pages, total_results }, true);
-      })();
+      console.log("reset page number");
+      resetPage();
+      if (!fetchMovies) return;
+      if (query.length === 0) {
+        return;
+      }
+      console.log(fetchMovies);
+      const { results, total_pages, total_results } = fetchMovies;
+      addMovies(results, { total_pages, total_results }, true);
+      changeURL(URL);
     }, 500);
     return () => clearTimeout(typeTimer);
-  }, [query, addMovies]);
+  }, [addMovies, fetchMovies, query, changeURL, URL, resetPage]);
 
   return (
     <div className={`${styles["nav-form"]} row`}>

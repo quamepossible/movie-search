@@ -1,5 +1,6 @@
 import styles from "./Body.module.css";
 import defaultImg from '../../assets/not-found.jpg';
+
 const Movie = (props) => {
   const imgUrl = props.imgSrc ? `http://image.tmdb.org/t/p/w500${props.imgSrc}` : defaultImg;
   return (

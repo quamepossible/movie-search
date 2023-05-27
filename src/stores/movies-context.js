@@ -1,4 +1,4 @@
-import { createContext, memo } from "react";
+import { createContext } from "react";
 
 const MoviesCtx = createContext();
 

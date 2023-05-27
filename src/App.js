@@ -1,13 +1,15 @@
-import { useContext } from "react";
 import MoviesProvider from "./stores/MoviesProvider";
+import PaginationProvider from "./stores/pagination/page-number";
 import Home from "./components/Home";
-import MoviesCtx from "./stores/movies-context";
 
+import Modal from "./components/MODAL/Modal";
 
 function App() {
   return (
     <MoviesProvider>
-      <Home/>
+      <PaginationProvider>
+        <Home />
+      </PaginationProvider>
     </MoviesProvider>
   );
 }

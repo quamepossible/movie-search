@@ -1,38 +1,46 @@
-import React, { Fragment, useEffect, useContext, useCallback, useState } from "react";
+import React, {
+  Fragment,
+  useEffect,
+  useContext,
+  useState,
+} from "react";
 import MoviesCtx from "../stores/movies-context";
+import { PageNumberCtx } from "../stores/pagination/page-number";
+
+import useFetchHook from "../Hooks/fetch-hook";
 import Navigation from "./NAV/Navigations";
 import Body from "./BODY/Body";
+import styles from './Home.module.css'
+import spinner from "../assets/spinner.svg";
+
 
 const Home = () => {
   const [loadFinished, setLoadFinished] = useState(false);
   const allMoviesCtx = useContext(MoviesCtx);
-  const { addMovies } = allMoviesCtx;
+  const { addMovies, changeURL } = allMoviesCtx;
 
-  // fetch function
-  const fetchMovies = useCallback(async () => {
-    const fetchURL = `https://api.themoviedb.org/3/discover/movie?include_adult=true&release_date.gte=2023`;
-    const fetchInitMovies = await fetch(fetchURL, {
-      method: "GET",
-      headers: {
-        accept: "application/json",
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2OGY5Y2IyNDM5ODIxMzNkN2Q3NzU3YWU4MTBhMTJlOSIsInN1YiI6IjY0NmZjMzQzNTQzN2Y1MDEyNjNhM2QzMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.DiEhFATYQoD8ZLFa_rjLqPKkcq_jmPIbCHTaPF4sX9I",
-      },
-    });
-    const moviesResults = await fetchInitMovies.json();
+  const pageNumber = useContext(PageNumberCtx);
+  const { nextPage } = pageNumber;
 
-    const { results, total_pages, total_results } = moviesResults;
-    addMovies(results, { total_pages, total_results });
-    setLoadFinished(true);
-  }, [addMovies]);
-
+  const URL =
+    "https://api.themoviedb.org/3/discover/movie?include_adult=true&release_date.gte=2023";
+  const fetchMovies = useFetchHook(URL);
   useEffect(() => {
-    fetchMovies();
-  }, [fetchMovies]);
+    if (!fetchMovies) return;
+    const { results, total_pages, total_results } = fetchMovies;
+    addMovies(results, { total_pages, total_results });
+    changeURL(URL);
+    setLoadFinished(true);
+    nextPage();
+  }, [addMovies, fetchMovies, changeURL, nextPage]);
 
   return (
     <Fragment>
       <Navigation />
+      {!loadFinished && <div className={styles["hold-spinner"]}>
+        <img src={spinner} alt="spinner" className={styles.spinner} />
+        <p className={styles["loading-text"]}>Loading Movies... please wait.</p>
+      </div>}
       {loadFinished && <Body />}
     </Fragment>
   );

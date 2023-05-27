@@ -1,11 +1,11 @@
-import { useState, useReducer, useCallback } from "react";
+import { useReducer, useCallback } from "react";
 import MoviesCtx from "./movies-context";
 
 const initialMoviesState = {
   movies: [],
   pages: 0,
-  currentPage: 0,
   resultsAmt: 0,
+  defaultURL: null,
 };
 
 const moviesReducer = (state, action) => {
@@ -14,7 +14,6 @@ const moviesReducer = (state, action) => {
       return {
         ...state,
         movies: [...state.movies, ...action.movies],
-        currentPage: state.currentPage + 1,
       };
     case "PAGES":
       return {
@@ -24,11 +23,17 @@ const moviesReducer = (state, action) => {
       };
     case "CUSTOM":
       return {
+        ...state,
         movies: [...action.qty.newMovies],
         pages: action.qty.total_pages,
-        currentPage: 0,
         resultsAmt: action.qty.total_results,
       };
+    case "URL":
+      return {
+        ...state,
+        defaultURL: action.url,
+      };
+  
     default:
       return state;
   }
@@ -43,7 +48,6 @@ const MoviesProvider = (props) => {
   const addMovies = useCallback((newMovies, pages = null, custom = null) => {
     if (custom) {
       const { total_pages, total_results } = pages;
-      console.log(pages);
       dispatchMoviesState({
         type: "CUSTOM",
         qty: { total_pages, total_results, newMovies },
@@ -60,12 +64,18 @@ const MoviesProvider = (props) => {
     }
   }, []);
 
+  const setCurrentURL = useCallback((url) => {
+    dispatchMoviesState({ type: "URL", url });
+  }, []);
+
+
   const ctxValues = {
     movies: moviesState.movies,
     totalMovies: moviesState.resultsAmt,
     totalPages: moviesState.pages,
-    currentPage: moviesState.currentPage,
     addMovies,
+    changeURL: setCurrentURL,
+    DEFAULT_URL: moviesState.defaultURL,
   };
   return (
     <MoviesCtx.Provider value={ctxValues}>{props.children}</MoviesCtx.Provider>
