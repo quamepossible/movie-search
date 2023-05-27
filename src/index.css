@@ -1,0 +1,44 @@
+@import url("https://fonts.googleapis.com/css2?family=Bruno+Ace+SC&family=Changa:wght@300&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.row {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin-right: -15px;
+  margin-left: -15px;
+}
+
+.center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+input,
+button,
+select {
+  border: none;
+  outline: none !important;
+  font-family: "Bruno Ace SC", cursive;
+  font-family: "Changa", sans-serif;
+}
+
+html {
+  /* font-family: 'Noto Sans JP', sans-serif; */
+  font-family: "Bruno Ace SC", cursive;
+  font-family: "Changa", sans-serif;
+}
+
+body {
+  margin: 0;
+  background-color: #000141;
+}
