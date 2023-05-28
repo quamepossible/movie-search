@@ -13,7 +13,13 @@ const Home = () => {
   const { addMovies, changeURL } = allMoviesCtx;
 
   const pageNumber = useContext(PageNumberCtx);
-  const { nextPage, handleFetching, setHandleFetching } = pageNumber;
+  const {
+    nextPage,
+    handleFetching,
+    setHandleFetching,
+    emptyResults,
+    setEmptyResults,
+  } = pageNumber;
   const { loadingDone, errorLoading } = handleFetching;
 
   const URL =
@@ -21,6 +27,7 @@ const Home = () => {
   const fetchMovies = useFetchHook(URL);
 
   useEffect(() => {
+    setEmptyResults(false);
     if (!fetchMovies) {
       setHandleFetching((prev) => ({ ...prev, errorLoading: true }));
       return;
@@ -28,14 +35,21 @@ const Home = () => {
     const { results, total_pages, total_results } = fetchMovies;
     addMovies(results, { total_pages, total_results });
     console.log(fetchMovies);
-
+    if (results.length === 0) setEmptyResults(true);
     if (!results) {
       setHandleFetching((prev) => ({ ...prev, errorLoading: true }));
       return;
     }
     changeURL(URL);
     setHandleFetching({ loadingDone: true, errorLoading: false });
-  }, [addMovies, fetchMovies, changeURL, nextPage, setHandleFetching]);
+  }, [
+    addMovies,
+    fetchMovies,
+    changeURL,
+    nextPage,
+    setHandleFetching,
+    setEmptyResults,
+  ]);
 
   return (
     <Fragment>
@@ -44,6 +58,12 @@ const Home = () => {
         <p className={styles["no-conn"]}>
           There was an error with your request. <br /> Check your internet
           connection and try refreshing the page.
+        </p>
+      )}
+
+      {emptyResults && (
+        <p style={{ color: "white", textAlign: "center", fontSize: "23px" }}>
+          🚫 No Movies found
         </p>
       )}
 

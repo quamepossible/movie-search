@@ -5,9 +5,9 @@ import Home from "./components/Home";
 import Modal from "./components/MODAL/Modal";
 
 function App() {
-  window.addEventListener('blur', () => {
-    console.log("You've left page");
-  })
+  // window.addEventListener('blur', () => {
+  //   console.log("You've left page");
+  // })
   return (
     <MoviesProvider>
       <PaginationProvider>

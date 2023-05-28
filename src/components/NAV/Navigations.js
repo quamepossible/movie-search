@@ -9,9 +9,13 @@ const Navigation = () => {
   const allMoviesCtx = useContext(MoviesCtx);
   const pageNumbering = useContext(PageNumberCtx);
 
-  const { resetPage, pageNumber, handleFetching, setHandleFetching } =
-    pageNumbering;
-  const { loadingDone, errorLoading } = handleFetching;
+  const {
+    resetPage,
+    pageNumber,
+    setHandleFetching,
+    emptyResults,
+    setEmptyResults,
+  } = pageNumbering;
 
   const { addMovies, changeURL } = allMoviesCtx;
   const [query, setQuery] = useState("");
@@ -20,35 +24,20 @@ const Navigation = () => {
     setQuery(e.target.value);
   };
 
-  const yearChangeHandler = (e) => {
-    const year = e.target.value;
-    // show loading spinner
-    setHandleFetching((prev) => ({ ...prev, loadingDone: false }));
-    // 1. fetch movie using this year value
-    const URL = `https://api.themoviedb.org/3/discover/movie?include_adult=false&primary_release_year=${year}`;
-    filterSearch(URL).then((moviesData) => {
-      const { results, total_pages, total_results } = moviesData;
-      console.log(moviesData);
-      // 2. update movies array
-      addMovies(results, { total_pages, total_results }, true);
-      // 3. change current URL
-      changeURL(URL);
-      // 4. reset page number
-      resetPage();
-      // hide loading spinner
-      setHandleFetching((prev) => ({ ...prev, loadingDone: true }));
-    });
-  };
-  const ratingsChangeHandler = function(e, popular = false){
-    const rating = e.target.value;
-    console.log(popular);
+  const filterChangeHandler = function (e, action = null) {
+    // remove empty results notice
+    setEmptyResults(false);
+    const query = e.target.value;
     let fullQuery;
-    const urlParam = rating === "low" ? "asc" : "desc";
-    if (!popular) {
+    const urlParam = query === "low" ? "asc" : "desc";
+    if (action === "rating") {
       fullQuery = `sort_by=vote_average.${urlParam}`;
     }
-    else{
+    if (action === "popular") {
       fullQuery = `sort_by=popularity.${urlParam}`;
+    }
+    if (action === "year") {
+      fullQuery = `primary_release_year=${query}`;
     }
     // show loading spinner
     setHandleFetching((prev) => ({ ...prev, loadingDone: false }));
@@ -65,6 +54,10 @@ const Navigation = () => {
       resetPage();
       // hide loading spinner
       setHandleFetching((prev) => ({ ...prev, loadingDone: true }));
+
+      if (results.length === 0) {
+        setEmptyResults(true);
+      } else setEmptyResults(false);
     });
   };
 
@@ -87,6 +80,7 @@ const Navigation = () => {
   const fetchMovies = useFetchHook(URL);
 
   useEffect(() => {
+    setEmptyResults(false);
     let typeTimer;
     if (query.length > 0) {
       setHandleFetching((prev) => ({ ...prev, loadingDone: false }));
@@ -103,6 +97,7 @@ const Navigation = () => {
         addMovies(results, { total_pages, total_results }, true);
         changeURL(URL);
         setHandleFetching((prev) => ({ ...prev, loadingDone: true }));
+        if (results.length === 0) setEmptyResults(true);
       }, 500);
     } else {
       console.log("empty search");
@@ -110,6 +105,7 @@ const Navigation = () => {
     return () => {
       setHandleFetching({ errorLoading: false, loadingDone: true });
       clearTimeout(typeTimer);
+      setEmptyResults(false);
     };
   }, [
     addMovies,
@@ -119,6 +115,7 @@ const Navigation = () => {
     URL,
     resetPage,
     setHandleFetching,
+    setEmptyResults,
   ]);
 
   return (
@@ -145,7 +142,7 @@ const Navigation = () => {
                 <select
                   type="text"
                   className={styles["filter-input"]}
-                  onChange={yearChangeHandler}
+                  onChange={(e) => filterChangeHandler(e, "year")}
                 >
                   <option value="">All</option>
                   <option value="2023">2023</option>
@@ -176,7 +173,7 @@ const Navigation = () => {
                 <select
                   type="text"
                   className={styles["filter-input"]}
-                  onChange={ratingsChangeHandler}
+                  onChange={(e) => filterChangeHandler(e, "rating")}
                 >
                   <option value="">All</option>
                   <option value="high">High to Low</option>
@@ -192,7 +189,11 @@ const Navigation = () => {
                 <p>Order By:</p>
               </div>
               <div className={styles["filter-selection"]}>
-                <select type="text" className={styles["filter-input"]} onChange={(e) => ratingsChangeHandler(e, true)}>
+                <select
+                  type="text"
+                  className={styles["filter-input"]}
+                  onChange={(e) => filterChangeHandler(e, "popular")}
+                >
                   <option value="">All</option>
                   <option value="high">High Popularity</option>
                   <option value="low">Low Popularity</option>

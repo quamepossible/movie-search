@@ -10,7 +10,7 @@ const Body = () => {
   const [loadMore, setLoadMore] = useState(false);
 
   const pageNumbering = useContext(PageNumberCtx);
-  const { nextPage, pageNumber } = pageNumbering;
+  const { nextPage, pageNumber, setEmptyResults } = pageNumbering;
 
   const allMoviesCtx = useContext(MoviesCtx);
   const { movies, totalMovies, totalPages, addMovies, DEFAULT_URL } =
@@ -47,13 +47,17 @@ const Body = () => {
         },
       });
 
-      if(!fetchInitMovies) throw new Error ('Request Error');
+      if (!fetchInitMovies) throw new Error("Request Error");
       const moviesResults = await fetchInitMovies.json();
       const { results } = moviesResults;
       console.log(moviesResults);
       addMovies(results);
       nextPage();
       setLoadMore(false);
+      if (results.length === 0){
+        setEmptyResults(true);
+      }
+      else setEmptyResults(false);
     } catch (err) {
       console.log(err.message);
     }
