@@ -12,8 +12,6 @@ const Navigation = () => {
   const { resetPage, pageNumber, handleFetching, setHandleFetching } =
     pageNumbering;
   const { loadingDone, errorLoading } = handleFetching;
-  console.log("Loading Done : " + loadingDone);
-  // console.log('Loading Done : ' + loadingDone)
 
   const { addMovies, changeURL } = allMoviesCtx;
   const [query, setQuery] = useState("");
@@ -27,7 +25,35 @@ const Navigation = () => {
     // show loading spinner
     setHandleFetching((prev) => ({ ...prev, loadingDone: false }));
     // 1. fetch movie using this year value
-    const URL = `https://api.themoviedb.org/3/discover/movie?include_adult=true&primary_release_year=${year}`;
+    const URL = `https://api.themoviedb.org/3/discover/movie?include_adult=false&primary_release_year=${year}`;
+    filterSearch(URL).then((moviesData) => {
+      const { results, total_pages, total_results } = moviesData;
+      console.log(moviesData);
+      // 2. update movies array
+      addMovies(results, { total_pages, total_results }, true);
+      // 3. change current URL
+      changeURL(URL);
+      // 4. reset page number
+      resetPage();
+      // hide loading spinner
+      setHandleFetching((prev) => ({ ...prev, loadingDone: true }));
+    });
+  };
+  const ratingsChangeHandler = function(e, popular = false){
+    const rating = e.target.value;
+    console.log(popular);
+    let fullQuery;
+    const urlParam = rating === "low" ? "asc" : "desc";
+    if (!popular) {
+      fullQuery = `sort_by=vote_average.${urlParam}`;
+    }
+    else{
+      fullQuery = `sort_by=popularity.${urlParam}`;
+    }
+    // show loading spinner
+    setHandleFetching((prev) => ({ ...prev, loadingDone: false }));
+    // 1. fetch movie using this year value
+    const URL = `https://api.themoviedb.org/3/discover/movie?include_adult=false&${fullQuery}`;
     filterSearch(URL).then((moviesData) => {
       const { results, total_pages, total_results } = moviesData;
       console.log(moviesData);
@@ -63,6 +89,7 @@ const Navigation = () => {
   useEffect(() => {
     let typeTimer;
     if (query.length > 0) {
+      setHandleFetching((prev) => ({ ...prev, loadingDone: false }));
       typeTimer = setTimeout(() => {
         console.log("reset page number");
         resetPage();
@@ -75,12 +102,24 @@ const Navigation = () => {
         const { results, total_pages, total_results } = fetchMovies;
         addMovies(results, { total_pages, total_results }, true);
         changeURL(URL);
+        setHandleFetching((prev) => ({ ...prev, loadingDone: true }));
       }, 500);
     } else {
       console.log("empty search");
     }
-    return () => clearTimeout(typeTimer);
-  }, [addMovies, fetchMovies, query, changeURL, URL, resetPage]);
+    return () => {
+      setHandleFetching({ errorLoading: false, loadingDone: true });
+      clearTimeout(typeTimer);
+    };
+  }, [
+    addMovies,
+    fetchMovies,
+    query,
+    changeURL,
+    URL,
+    resetPage,
+    setHandleFetching,
+  ]);
 
   return (
     <div className={`${styles["nav-form"]} row`}>
@@ -134,8 +173,14 @@ const Navigation = () => {
                 <p>Rating:</p>
               </div>
               <div className={styles["filter-selection"]}>
-                <select type="text" className={styles["filter-input"]}>
+                <select
+                  type="text"
+                  className={styles["filter-input"]}
+                  onChange={ratingsChangeHandler}
+                >
                   <option value="">All</option>
+                  <option value="high">High to Low</option>
+                  <option value="low">Low to High</option>
                 </select>
               </div>
             </div>
@@ -147,8 +192,10 @@ const Navigation = () => {
                 <p>Order By:</p>
               </div>
               <div className={styles["filter-selection"]}>
-                <select type="text" className={styles["filter-input"]}>
+                <select type="text" className={styles["filter-input"]} onChange={(e) => ratingsChangeHandler(e, true)}>
                   <option value="">All</option>
+                  <option value="high">High Popularity</option>
+                  <option value="low">Low Popularity</option>
                 </select>
               </div>
             </div>

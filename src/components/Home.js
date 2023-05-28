@@ -17,7 +17,7 @@ const Home = () => {
   const { loadingDone, errorLoading } = handleFetching;
 
   const URL =
-    "https://api.themoviedb.org/3/discover/movie?include_adult=true&release_date.gte=2023";
+    "https://api.themoviedb.org/3/discover/movie?include_adult=false&release_date.gte=2023";
   const fetchMovies = useFetchHook(URL);
 
   useEffect(() => {
@@ -37,7 +37,6 @@ const Home = () => {
     setHandleFetching({ loadingDone: true, errorLoading: false });
   }, [addMovies, fetchMovies, changeURL, nextPage, setHandleFetching]);
 
-  console.log("HOME PAGE");
   return (
     <Fragment>
       <Navigation />
