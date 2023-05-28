@@ -37,7 +37,22 @@
 .movie-year,
 .movie-rating {
   padding: 1px 10px;
+}
+
+.movie-year{
+  border-radius: 3px;
   background-color: white;
+}
+
+.star{
+  margin-left: 10px;
+  position: relative;
+}
+
+.movie-rating{
+  background-color: none;
+  color: white;
+  font-weight: bold;
 }
 
 .hold-spinner {

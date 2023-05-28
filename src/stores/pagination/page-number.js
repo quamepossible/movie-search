@@ -1,7 +1,7 @@
-import { createContext, useReducer, useCallback } from "react";
+import { createContext, useReducer, useCallback, useState } from "react";
 
 const PageNumberCtx = createContext({
-  pageNumber: 0,
+  pageNumber: null,
   nextPage: () => {},
   resetPage: () => {},
 });
@@ -25,6 +25,8 @@ const pageReducer = (state, action) => {
 
 const PaginationProvider = (props) => {
   const [page, dispatchNumbering] = useReducer(pageReducer, PageNumberState);
+  const [handleFetching, setHandleFetching] = useState({loadingDone: false, errorLoading: false});
+ 
 
   const nextPage = useCallback(() => {
     dispatchNumbering({ type: "INCREASE" });
@@ -38,6 +40,8 @@ const PaginationProvider = (props) => {
     pageNumber: page.page,
     nextPage,
     resetPage,
+    handleFetching,
+    setHandleFetching
   };
 
   return (

@@ -10,6 +10,7 @@ const Movie = (props) => {
         <p className={styles["movie-title"]}>{props.title}</p>
         <p className={styles["movie-info"]}>
           <span className={styles["movie-year"]}>{props.year}</span>{" "}
+          <span className={styles.star}><ion-icon className="center" name="star" style={{color: 'yellow'}}></ion-icon></span>
           <span className={styles["movie-rating"]}>
             {props.rating.toFixed(1)}
           </span>

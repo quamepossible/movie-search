@@ -9,29 +9,76 @@ const Navigation = () => {
   const allMoviesCtx = useContext(MoviesCtx);
   const pageNumbering = useContext(PageNumberCtx);
 
-  const { resetPage, pageNumber } = pageNumbering;
+  const { resetPage, pageNumber, handleFetching, setHandleFetching } =
+    pageNumbering;
+  const { loadingDone, errorLoading } = handleFetching;
+  console.log("Loading Done : " + loadingDone);
+  // console.log('Loading Done : ' + loadingDone)
 
   const { addMovies, changeURL } = allMoviesCtx;
   const [query, setQuery] = useState("");
+
   const searchMovieHandler = (e) => {
     setQuery(e.target.value);
   };
 
+  const yearChangeHandler = (e) => {
+    const year = e.target.value;
+    // show loading spinner
+    setHandleFetching((prev) => ({ ...prev, loadingDone: false }));
+    // 1. fetch movie using this year value
+    const URL = `https://api.themoviedb.org/3/discover/movie?include_adult=true&primary_release_year=${year}`;
+    filterSearch(URL).then((moviesData) => {
+      const { results, total_pages, total_results } = moviesData;
+      console.log(moviesData);
+      // 2. update movies array
+      addMovies(results, { total_pages, total_results }, true);
+      // 3. change current URL
+      changeURL(URL);
+      // 4. reset page number
+      resetPage();
+      // hide loading spinner
+      setHandleFetching((prev) => ({ ...prev, loadingDone: true }));
+    });
+  };
+
+  // FILTER SEARCHES
+  const filterSearch = async (url) => {
+    const fetchMovies = await fetch(url, {
+      method: "GET",
+      headers: {
+        accept: "application/json",
+        Authorization:
+          "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2OGY5Y2IyNDM5ODIxMzNkN2Q3NzU3YWU4MTBhMTJlOSIsInN1YiI6IjY0NmZjMzQzNTQzN2Y1MDEyNjNhM2QzMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.DiEhFATYQoD8ZLFa_rjLqPKkcq_jmPIbCHTaPF4sX9I",
+      },
+    });
+    const moviesFound = await fetchMovies.json();
+    return moviesFound;
+  };
+
+  // FETCH MOVIES;
   const URL = `https://api.themoviedb.org/3/search/movie?query=${query}`;
   const fetchMovies = useFetchHook(URL);
+
   useEffect(() => {
-    const typeTimer = setTimeout(() => {
-      console.log("reset page number");
-      resetPage();
-      if (!fetchMovies) return;
-      if (query.length === 0) {
-        return;
-      }
-      console.log(fetchMovies);
-      const { results, total_pages, total_results } = fetchMovies;
-      addMovies(results, { total_pages, total_results }, true);
-      changeURL(URL);
-    }, 500);
+    let typeTimer;
+    if (query.length > 0) {
+      typeTimer = setTimeout(() => {
+        console.log("reset page number");
+        resetPage();
+        if (!fetchMovies) return;
+        if (query.length === 0) {
+          console.log("empty field");
+          return;
+        }
+        console.log(fetchMovies);
+        const { results, total_pages, total_results } = fetchMovies;
+        addMovies(results, { total_pages, total_results }, true);
+        changeURL(URL);
+      }, 500);
+    } else {
+      console.log("empty search");
+    }
     return () => clearTimeout(typeTimer);
   }, [addMovies, fetchMovies, query, changeURL, URL, resetPage]);
 
@@ -56,8 +103,26 @@ const Navigation = () => {
                 <p>Year:</p>
               </div>
               <div className={styles["filter-selection"]}>
-                <select type="text" className={styles["filter-input"]}>
+                <select
+                  type="text"
+                  className={styles["filter-input"]}
+                  onChange={yearChangeHandler}
+                >
                   <option value="">All</option>
+                  <option value="2023">2023</option>
+                  <option value="2022">2022</option>
+                  <option value="2021">2021</option>
+                  <option value="2020">2020</option>
+                  <option value="2019">2019</option>
+                  <option value="2018">2018</option>
+                  <option value="2017">2017</option>
+                  <option value="2016">2016</option>
+                  <option value="2015">2015</option>
+                  <option value="2014">2014</option>
+                  <option value="2013">2013</option>
+                  <option value="2012">2012</option>
+                  <option value="2011">2011</option>
+                  <option value="2010">2010</option>
                 </select>
               </div>
             </div>

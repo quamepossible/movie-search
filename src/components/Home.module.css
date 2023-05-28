@@ -14,3 +14,8 @@
     font-size: 22px;
     color: white;
   }
+
+  .no-conn{
+    color: red;
+    text-align: center;
+  }
