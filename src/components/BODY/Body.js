@@ -1,13 +1,16 @@
 import React, { useContext, useState } from "react";
+import ReactDOM from "react-dom";
 import MoviesCtx from "../../stores/movies-context";
 import { PageNumberCtx } from "../../stores/pagination/page-number";
 
+import Modal from "../MODAL/Modal";
 import Movie from "./Movie";
 import spinner from "../../assets/spinner.svg";
 import styles from "./Body.module.css";
 
 const Body = () => {
   const [loadMore, setLoadMore] = useState(false);
+  const [modalClicked, setModalClicked] = useState(false);
 
   const pageNumbering = useContext(PageNumberCtx);
   const { nextPage, pageNumber, setEmptyResults } = pageNumbering;
@@ -19,17 +22,27 @@ const Body = () => {
   const endOfPage = pageNumber + 1 > totalPages;
 
   const moviesList = movies.map((movie) => {
-    const { id, release_date, vote_average: rate, poster_path, title } = movie;
+    const {
+      id,
+      release_date,
+      overview,
+      vote_average: rate,
+      poster_path,
+      title,
+    } = movie;
     const getYear = isNaN(release_date)
       ? new Date(release_date).getFullYear()
       : "NA";
     return (
       <Movie
         key={id}
+        id={id}
         title={title}
         imgSrc={poster_path}
         rating={rate}
         year={getYear}
+        overview={overview}
+        whenClicked={setModalClicked}
       />
     );
   });
@@ -54,10 +67,9 @@ const Body = () => {
       addMovies(results);
       nextPage();
       setLoadMore(false);
-      if (results.length === 0){
+      if (results.length === 0) {
         setEmptyResults(true);
-      }
-      else setEmptyResults(false);
+      } else setEmptyResults(false);
     } catch (err) {
       console.log(err.message);
     }
@@ -66,7 +78,6 @@ const Body = () => {
   return (
     <>
       <div className={`${styles["hold-movies"]} row`}>{moviesList}</div>
-
       {loadMore && (
         <div className={styles["extra-load"]}>
           <img src={spinner} alt="spinner" className={styles.spinner} />
@@ -84,6 +95,12 @@ const Body = () => {
           )}
         </div>
       )}
+
+      {modalClicked &&
+        ReactDOM.createPortal(
+          <Modal overlayClicked={setModalClicked} />,
+          document.getElementById("overlay")
+        )}
     </>
   );
 };

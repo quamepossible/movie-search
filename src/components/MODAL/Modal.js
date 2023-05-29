@@ -1,11 +1,71 @@
-import React from 'react';
-import useFetchHook from '../../Hooks/fetch-hook';
+import React, { useContext } from "react";
+import { PageNumberCtx } from "../../stores/pagination/page-number";
+import styles from "./Modal.module.css";
 
-import styles from './Modal.module.css';
+const Modal = ({ overlayClicked }) => {
+  const ClickedMovieCtx = useContext(PageNumberCtx);
+  const { clickedMovie } = ClickedMovieCtx;
+  const {
+    title,
+    overview,
+    vote_average: rating,
+    poster_path: photo,
+  } = clickedMovie;
+  const imgSrc = `http://image.tmdb.org/t/p/w500${photo}`;
+  return (
+    <>
+      <div
+        className={styles.backdrop}
+        onClick={() => overlayClicked(false)}
+      ></div>
+      <div className={`${styles["overlay-content"]} center row`}>
+        <div className={styles["left-content"]}>
+          <img
+            src={imgSrc}
+            alt="dp"
+            className={`${styles["display-photo"]} center`}
+          />
+        </div>
+        <div
+          className={styles["right-content"]}
+          style={{
+            backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.9)), url(${imgSrc})`,
+          }}
+        >
+          <div className={`${styles["movie-content"]} center`}>
+            <p>
+              <span className={styles["info-head"]}>Title:</span>{" "}
+              <span className={styles["info-data"]}>{title}</span>
+            </p>
+            <p>
+              <span className={styles["info-head"]}>Released:</span>{" "}
+              <span className={styles["info-data"]}>20 - Jan - 2023</span>
+            </p>
+            <p className={styles["rating-field"]}>
+              <span className={`${styles["info-head"]} head-rate`}>Rating:</span>{" "}
+              <span className={`${styles["star"]}`}>
+                <ion-icon
+                  name="star"
+                  style={{
+                    color: "yellow",
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%,-50%)",
+                  }}
+                ></ion-icon>
+              </span>
+              <span className={styles["info-data"]}>{rating.toFixed(2)}</span>
+            </p>
+            <p>
+              <span className={styles["overview"]}>Overview</span>
+            </p>
+            <p>{overview}</p>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
 
-const Modal = () => {
-    const getMovies = useFetchHook('https://api.themoviedb.org/3/discover/movie?include_adult=true&release_date.gte=2023');
-    console.log(getMovies);
-}
-
-export default Modal
+export default Modal;

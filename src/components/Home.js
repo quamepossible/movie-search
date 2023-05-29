@@ -1,7 +1,7 @@
-import React, { Fragment, useEffect, useContext } from "react";
+import React, {useEffect, useContext } from "react";
+
 import MoviesCtx from "../stores/movies-context";
 import { PageNumberCtx } from "../stores/pagination/page-number";
-
 import useFetchHook from "../Hooks/fetch-hook";
 import Navigation from "./NAV/Navigations";
 import Body from "./BODY/Body";
@@ -29,7 +29,7 @@ const Home = () => {
   useEffect(() => {
     setEmptyResults(false);
     if (!fetchMovies) {
-      setHandleFetching((prev) => ({ ...prev, errorLoading: true }));
+      setHandleFetching({ loadingDone: true, errorLoading: true });
       return;
     }
     const { results, total_pages, total_results } = fetchMovies;
@@ -37,11 +37,14 @@ const Home = () => {
     console.log(fetchMovies);
     if (results.length === 0) setEmptyResults(true);
     if (!results) {
-      setHandleFetching((prev) => ({ ...prev, errorLoading: true }));
+      setHandleFetching({ loadingDone: true, errorLoading: true });
       return;
     }
     changeURL(URL);
     setHandleFetching({ loadingDone: true, errorLoading: false });
+    return () => {
+      setHandleFetching({ loadingDone: true, errorLoading: true });
+    };
   }, [
     addMovies,
     fetchMovies,
@@ -52,7 +55,7 @@ const Home = () => {
   ]);
 
   return (
-    <Fragment>
+    <div className={styles["container"]}>
       <Navigation />
       {errorLoading && loadingDone && (
         <p className={styles["no-conn"]}>
@@ -76,7 +79,7 @@ const Home = () => {
         </div>
       )}
       {loadingDone && !errorLoading && <Body />}
-    </Fragment>
+    </div>
   );
 };
 

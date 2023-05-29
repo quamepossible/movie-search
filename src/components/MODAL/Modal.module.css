@@ -1,0 +1,107 @@
+
+.backdrop{
+    width: 100%;
+    height: 100vh;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.89);
+    position: absolute;
+    z-index: 5;
+    cursor: grab;
+}
+
+.overlay-content{
+    width: 800px;
+    height: 450px;
+    background-color: rgba(0, 0, 0, 0.562);
+    z-index: 10;
+    /* border-radius: 20px; */
+    /* box-shadow: 0 0 20px 0px rgba(255, 255, 255, 0.616); */
+    border: 1px solid black;
+    /* overflow: hidden; */
+}
+
+.left-content{
+    width: 40%;
+    height: 100%;
+    position: relative;
+    background-color: rgba(0, 0, 0, 0.075);
+    border: 3px solid rgb(0, 200, 250);
+}
+
+.right-content{
+    width: 60%;
+    height: 100%;
+    overflow: auto;
+    position: relative;
+    border-style: solid solid solid none;
+    border-width: 3px;
+    border-color: white;
+    background-position: center;
+    background-size: cover;
+}
+
+.display-photo{
+    width: 90%;
+    height: 90%;
+    /* border: 5px solid white; */
+}
+
+.movie-content{
+    width: 90%;
+    height: 400px;
+    margin: auto;
+    /* background-color: red; */
+    text-align: center;
+    color: white;
+}
+
+.info-head{
+    font-size: 19px;
+    color: rgb(0, 174, 255);
+    padding-right: 10px;
+    /* font-weight: bold; */
+}
+
+.info-data{
+    font-size: 23px;
+    font-weight: bold;
+}
+
+.overview{
+    font-size: 22px;
+    background-color: black;
+    color: white;
+    padding: 0 20px;
+    border-radius: 80px;
+    display: inline-block;
+    margin: 10px 0;
+    border: 2px solid white;
+}
+
+.rating-field{
+    /* background-color: green; */
+    position: relative;
+    
+}
+
+.head-rate{
+    padding-right: 20px;
+}
+
+
+.star{
+    /* background-color: red; */
+    display: inline-block;
+    padding-left: 20px;
+    /* margin-left: 20px; */
+    width: 40px;
+    height: 40px;
+    position: relative;
+    top: 10px;
+}
+
+.star-ico{
+    color: yellow;
+}

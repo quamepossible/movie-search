@@ -27,6 +27,7 @@ const PaginationProvider = (props) => {
   const [page, dispatchNumbering] = useReducer(pageReducer, PageNumberState);
   const [handleFetching, setHandleFetching] = useState({loadingDone: false, errorLoading: false});
   const [emptyResults, setEmptyResults] = useState(false);
+  const [clickedMovie, setClickedMovie] = useState({});
 
   const nextPage = useCallback(() => {
     dispatchNumbering({ type: "INCREASE" });
@@ -44,6 +45,8 @@ const PaginationProvider = (props) => {
     setHandleFetching,
     emptyResults,
     setEmptyResults,
+    clickedMovie,
+    setClickedMovie,
   };
 
   return (

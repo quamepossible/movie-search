@@ -40,12 +40,16 @@ const Navigation = () => {
       fullQuery = `primary_release_year=${query}`;
     }
     // show loading spinner
-    setHandleFetching((prev) => ({ ...prev, loadingDone: false }));
+    setHandleFetching({ errorLoading: false, loadingDone: false });
     // 1. fetch movie using this year value
     const URL = `https://api.themoviedb.org/3/discover/movie?include_adult=false&${fullQuery}`;
     filterSearch(URL).then((moviesData) => {
-      const { results, total_pages, total_results } = moviesData;
       console.log(moviesData);
+      if (!moviesData) {
+        setHandleFetching({ loadingDone: true, errorLoading: true });
+        return;
+      }
+      const { results, total_pages, total_results } = moviesData;
       // 2. update movies array
       addMovies(results, { total_pages, total_results }, true);
       // 3. change current URL
@@ -53,8 +57,7 @@ const Navigation = () => {
       // 4. reset page number
       resetPage();
       // hide loading spinner
-      setHandleFetching((prev) => ({ ...prev, loadingDone: true }));
-
+      setHandleFetching({ errorLoading: false, loadingDone: true });
       if (results.length === 0) {
         setEmptyResults(true);
       } else setEmptyResults(false);
@@ -63,16 +66,22 @@ const Navigation = () => {
 
   // FILTER SEARCHES
   const filterSearch = async (url) => {
-    const fetchMovies = await fetch(url, {
-      method: "GET",
-      headers: {
-        accept: "application/json",
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2OGY5Y2IyNDM5ODIxMzNkN2Q3NzU3YWU4MTBhMTJlOSIsInN1YiI6IjY0NmZjMzQzNTQzN2Y1MDEyNjNhM2QzMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.DiEhFATYQoD8ZLFa_rjLqPKkcq_jmPIbCHTaPF4sX9I",
-      },
-    });
-    const moviesFound = await fetchMovies.json();
-    return moviesFound;
+    try {
+      const fetchMovies = await fetch(url, {
+        method: "GET",
+        headers: {
+          accept: "application/json",
+          Authorization:
+            "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2OGY5Y2IyNDM5ODIxMzNkN2Q3NzU3YWU4MTBhMTJlOSIsInN1YiI6IjY0NmZjMzQzNTQzN2Y1MDEyNjNhM2QzMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.DiEhFATYQoD8ZLFa_rjLqPKkcq_jmPIbCHTaPF4sX9I",
+        },
+      });
+      if (!fetchMovies) throw Error("Couldn't run filter search");
+      const moviesFound = await fetchMovies.json();
+      return moviesFound;
+    } catch (err) {
+      console.log(err.message);
+      return null;
+    }
   };
 
   // FETCH MOVIES;
@@ -87,7 +96,10 @@ const Navigation = () => {
       typeTimer = setTimeout(() => {
         console.log("reset page number");
         resetPage();
-        if (!fetchMovies) return;
+        if (!fetchMovies) {
+          setHandleFetching({ loadingDone: true, errorLoading: true });
+          return;
+        }
         if (query.length === 0) {
           console.log("empty field");
           return;
@@ -96,7 +108,7 @@ const Navigation = () => {
         const { results, total_pages, total_results } = fetchMovies;
         addMovies(results, { total_pages, total_results }, true);
         changeURL(URL);
-        setHandleFetching((prev) => ({ ...prev, loadingDone: true }));
+        setHandleFetching({ errorLoading: false, loadingDone: true });
         if (results.length === 0) setEmptyResults(true);
       }, 500);
     } else {

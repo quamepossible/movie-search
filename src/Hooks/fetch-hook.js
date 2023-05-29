@@ -18,6 +18,7 @@ const useFetchHook = (url) => {
         return fetchMov;
       } catch (err) {
         console.log(err.message);
+        return null;
       }
     },
     [url]
