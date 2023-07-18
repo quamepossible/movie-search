@@ -132,15 +132,15 @@ const Navigation = () => {
 
   return (
     <div className={`${styles["nav-form"]} row`}>
-      <form className={styles.form}>
+      <form className={styles.form} onSubmit={e => e.preventDefault()}>
         <div className={`${styles["hold-search"]} center`}>
           <input
             onChange={searchMovieHandler}
-            type="txt"
+            type="text"
             className={`${styles["search-input"]}`}
             placeholder="Type to search for movies...."
           />
-          <button className={styles.reload}>REFRESH</button>
+          <button className={styles.reload} type="button">REFRESH</button>
         </div>
       </form>
       <div className={styles["filter"]}>

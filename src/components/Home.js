@@ -29,7 +29,7 @@ const Home = () => {
   useEffect(() => {
     setEmptyResults(false);
     if (!fetchMovies) {
-      setHandleFetching({ loadingDone: true, errorLoading: true });
+      // setHandleFetching({ loadingDone: true, errorLoading: true });
       return;
     }
     const { results, total_pages, total_results } = fetchMovies;
