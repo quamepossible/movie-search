@@ -10,6 +10,7 @@ const Modal = ({ overlayClicked }) => {
     overview,
     vote_average: rating,
     poster_path: photo,
+    year
   } = clickedMovie;
   const imgSrc = `http://image.tmdb.org/t/p/w500${photo}`;
   return (
@@ -39,7 +40,7 @@ const Modal = ({ overlayClicked }) => {
             </p>
             <p>
               <span className={styles["info-head"]}>Released:</span>{" "}
-              <span className={styles["info-data"]}>20 - Jan - 2023</span>
+              <span className={styles["info-data"]}>{year}</span>
             </p>
             <p className={styles["rating-field"]}>
               <span className={`${styles["info-head"]} head-rate`}>Rating:</span>{" "}

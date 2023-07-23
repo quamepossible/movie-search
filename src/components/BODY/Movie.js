@@ -18,7 +18,8 @@ const Movie = (props) => {
           title: props.title,
           overview: props.overview,
           vote_average: props.rating,
-          poster_path: props.imgSrc
+          poster_path: props.imgSrc,
+          year: props.year
         })
         }} />
       <div className={styles["movie-details"]}>
