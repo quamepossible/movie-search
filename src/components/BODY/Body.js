@@ -55,8 +55,7 @@ const Body = () => {
         method: "GET",
         headers: {
           accept: "application/json",
-          Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2OGY5Y2IyNDM5ODIxMzNkN2Q3NzU3YWU4MTBhMTJlOSIsInN1YiI6IjY0NmZjMzQzNTQzN2Y1MDEyNjNhM2QzMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.DiEhFATYQoD8ZLFa_rjLqPKkcq_jmPIbCHTaPF4sX9I",
+          Authorization: process.env.REACT_APP_MOVIE_BEARER,
         },
       });
 
@@ -82,7 +81,7 @@ const Body = () => {
         <div className={styles["extra-load"]}>
           <img src={spinner} alt="spinner" className={styles.spinner} />
         </div>
-      )}
+      )};
 
       {!loadMore && (
         <div className={styles["load-more"]}>

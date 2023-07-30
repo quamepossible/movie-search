@@ -28,18 +28,21 @@ const Home = () => {
 
   useEffect(() => {
     setEmptyResults(false);
+    console.log(fetchMovies);
     if (!fetchMovies) {
-      // setHandleFetching({ loadingDone: true, errorLoading: true });
+      console.log('unable to fetch');
+      setHandleFetching({ loadingDone: true, errorLoading: true });
       return;
     }
     const { results, total_pages, total_results } = fetchMovies;
-    addMovies(results, { total_pages, total_results });
-    console.log(fetchMovies);
-    if (results.length === 0) setEmptyResults(true);
     if (!results) {
       setHandleFetching({ loadingDone: true, errorLoading: true });
       return;
     }
+    if (results.length === 0) setEmptyResults(true);
+    addMovies(results, { total_pages, total_results });
+    console.log(fetchMovies);
+
     changeURL(URL);
     setHandleFetching({ loadingDone: true, errorLoading: false });
     return () => {
