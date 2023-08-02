@@ -55,7 +55,7 @@ const Body = () => {
         method: "GET",
         headers: {
           accept: "application/json",
-          Authorization: process.env.REACT_APP_MOVIE_BEARER,
+          Authorization: process.env.MOVIE_BEARER,
         },
       });
 
