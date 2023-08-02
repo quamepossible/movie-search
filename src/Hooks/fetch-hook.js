@@ -9,7 +9,7 @@ const useFetchHook = (url) => {
           method: "GET",
           headers: {
             accept: "application/json",
-            Authorization: process.env.REACT_APP_MOVIE_BEARER,
+            Authorization: process.env.MOVIE_BEARER,
           },
         });
         if (!fetchData.ok) throw new Error("Couldn't fetch Movies");
