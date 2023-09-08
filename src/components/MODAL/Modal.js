@@ -26,6 +26,9 @@ const Modal = ({ overlayClicked }) => {
             alt="dp"
             className={`${styles["display-photo"]} center`}
           />
+          <span className={styles['close-modal']} onClick={()=>overlayClicked(false)}>
+              <ion-icon name="close-outline" className="center"></ion-icon>
+          </span>
         </div>
         <div
           className={styles["right-content"]}
