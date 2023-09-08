@@ -1,5 +1,5 @@
 .hold-movies {
-  width: 1200px;
+  max-width: 1200px;
   height: auto;
   margin: 40px auto;
   /* background-color: black; */
@@ -14,13 +14,12 @@
 
 .each-movie {
   display: block;
-  width: 80%;
+  width: 240px;
   height: 350px;
   border: 5px solid white;
   margin: auto;
   cursor: pointer;
   transition: 0.1s;
-  /* background-color: green; */
 }
 
 .each-movie:hover{
@@ -30,7 +29,7 @@
 }
 
 .movie-details {
-  width: 80%;
+  width: 240px;
   height: auto;
   margin: auto;
   padding-bottom: 3px;
@@ -115,4 +114,30 @@
 .load-more button:hover{
   background-color: rgb(2, 81, 228);
   transition: 0.3s;
+}
+
+
+@media (max-width: 1080px) {
+  .hold-each-movie {
+    width: 33.33%;
+  }
+}
+
+
+@media (max-width: 800px) {
+  .hold-each-movie {
+    width: 50%;
+  }
+}
+
+
+@media (max-width: 530px) {
+  .hold-each-movie {
+    width: 90%;
+    margin: auto;
+    margin-bottom: 50px;
+    border: 1px solid rgb(162, 162, 162);
+    padding: 20px 0;
+    border-radius: 15px;
+  }
 }

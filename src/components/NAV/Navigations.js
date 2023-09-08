@@ -133,14 +133,16 @@ const Navigation = () => {
   return (
     <div className={`${styles["nav-form"]} row`}>
       <form className={styles.form} onSubmit={e => e.preventDefault()}>
-        <div className={`${styles["hold-search"]} center`}>
+        <div className={`${styles["hold-search"]} center row`}>
           <input
             onChange={searchMovieHandler}
             type="text"
             className={`${styles["search-input"]}`}
             placeholder="Type to search for movies...."
           />
-          <button className={styles.reload} type="button">REFRESH</button>
+          <button className={`${styles.reload}`} type="button">
+              <ion-icon name="refresh-outline" className='center'></ion-icon>
+          </button>
         </div>
       </form>
       <div className={styles["filter"]}>

@@ -14,12 +14,13 @@
   background-color: rgb(2, 20, 82);
   border: 4px solid white;
   border-radius: 90px;
-  width: 1240px;
+  max-width: 1240px;
   height: auto;
   margin: auto;
   font-family: "Bruno Ace SC", cursive;
   font-family: "Changa", sans-serif;
   overflow: hidden;
+  /* background-color: red; */
 }
 
 .form {
@@ -27,12 +28,14 @@
   width: 700px;
   height: 100px;
   position: relative;
+  /* background-color: blue; */
 }
 
 .hold-search {
   width: 650px;
-  height: auto;
+  height: 60px;
   /* background-color: red; */
+  overflow: hidden;
 }
 
 .search-input {
@@ -40,21 +43,26 @@
   width: 500px;
   height: 60px;
   padding: 0 20px;
+  border-radius: 0;
   border-top-left-radius: 100px;
   border-bottom-left-radius: 100px;
+  font-size: 16px;
 }
 
 .reload {
   display: inline-block;
   width: 150px;
   height: 60px;
-  padding: 15px;
+  /* padding: 15px; */
+  font-size: 40px;
+  font-weight: bold;
   background-color: green;
   color: white;
   font-weight: bold;
   cursor: pointer;
   border-top-right-radius: 100px;
   border-bottom-right-radius: 100px;
+  position: relative;
 }
 
 .search-input::placeholder {
@@ -63,7 +71,7 @@
   font-family: "Changa", sans-serif;
 }
 
-.reload:hover{
+.reload:hover {
   background-color: rgb(1, 110, 1);
 }
 
@@ -77,7 +85,6 @@
   width: 95%;
   height: auto;
   margin: auto;
-  /* background-color: rgba(0, 128, 0, 0.308); */
 }
 
 .hold-filter-lists {
@@ -116,4 +123,59 @@
   padding: 0 5px;
   width: 100%;
   height: 50px;
+}
+
+@media (max-width: 1260px) {
+  .nav-form {
+    max-width: 700px;
+    border-radius: 10px;
+    padding-bottom: 10px;
+    border: none;
+    border: 10px solid #000141;
+  }
+
+  .form {
+    width: 100%;
+  }
+
+  .filter {
+    width: 500px;
+    margin: auto;
+  }
+}
+
+@media (max-width: 710px) {
+  .hold-search {
+    width: 500px;
+  }
+
+  .search-input {
+    width: 400px;
+  }
+
+  .reload {
+    width: 100px;
+  }
+}
+
+@media (max-width: 510px) {
+  .nav-form {
+    margin-top: -30px;
+    box-shadow:  0 0 5px black;
+  }
+  .hold-search {
+    width: 300px;
+  }
+
+  .search-input {
+    width: 250px;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+  }
+
+  .reload {
+    width: 50px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+  }
 }
