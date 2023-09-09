@@ -95,6 +95,8 @@ const Body = () => {
         </div>
       )}
 
+      {!loadMore && (endOfPage && <p className={styles['end']}>-- End of Page --</p>)}
+
       {modalClicked &&
         ReactDOM.createPortal(
           <Modal overlayClicked={setModalClicked} />,

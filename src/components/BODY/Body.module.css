@@ -141,3 +141,10 @@
     border-radius: 15px;
   }
 }
+
+
+.end {
+  color: rgb(198, 198, 198);
+  font-size: 19px;
+  text-align: center;
+}
